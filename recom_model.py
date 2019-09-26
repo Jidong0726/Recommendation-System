@@ -17,10 +17,13 @@ class recommendation_system(object):
             self.model = KNNBasic()
         self.topic_table = topic_table
         self.rat_scale = rating_scale
+        self.similarity = KNNBasic(sim_options={'name': 'pearson' ,'user_based': True})
         
     def train(self, cross_valid = False, k = 0):
         reader = Reader(rating_scale = (0,self.rat_scale))
         recom_data = Dataset.load_from_df(self.topic_table[['user', 'topic', 'rating']], reader)
+        train_set = recom_data.build_full_trainset()
+        self.similarity.fit(train_set)
         if not cross_valid:
             train_set = recom_data.build_full_trainset()
             self.model.fit(train_set)
@@ -47,6 +50,21 @@ class recommendation_system(object):
                 rating_matrix[str(user)].append([str(item),self.model.predict(user,item).est])
             rating_matrix[str(user)].sort(key = lambda x:x[1], reverse = True)
         return rating_matrix
+    
+    def compute_similarity(self):
+        sim_table = pd.DataFrame(columns = ['user','sim_user','order'])
+        for user in self.similarity.trainset.all_users():
+            lists = self.similarity.get_neighbors(user,k = 5)
+            userid = self.similarity.trainset.to_raw_uid(user)
+            count = 1
+            for elem in lists:
+                sim_userid = self.similarity.trainset.to_raw_uid(elem)
+                sim_table = sim_table.append({'user': userid, 'sim_user': sim_userid, 'order':count},ignore_index = True)
+                count +=1
+        return sim_table
+            
+            
+            
 
 
 

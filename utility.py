@@ -51,7 +51,7 @@ def recom_project(project_and_topic, topic_table, rating_matrix, exist_table, to
             project_list = project_and_topic[topic]
             for item in project_list:
                 if item not in exist_table[user]:
-                    recom_project_table = recom_project_table.append({'user':user,'project':item},ignore_index = True)
+                    recom_project_table = recom_project_table.append({'user':int(user),'project':int(item)},ignore_index = True)
     
     return recom_project_table
                 
