@@ -20,7 +20,7 @@ class load_table_from_MySQL(object):
             dic = dict(zip(column_names, list(tuples)))
             wholetable = wholetable.append(dic,ignore_index = True)
         
-        return wholetable
+        return wholetable,column_names
         
             
         
@@ -32,5 +32,5 @@ if __name__ == "__main__":
     x = load_table_from_MySQL(username,password)
     print ('connection complete')
     table_name = input('Enter your table name: ')
-    z = x.load_data(table_name)
+    z,lists = x.load_data(table_name)
     z.to_csv(table_name+'.csv')
