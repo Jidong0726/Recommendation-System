@@ -67,6 +67,8 @@ class recom_dataverse(object):
         wholetable, column_names = x.load_data('dr_rmds_users')
         self.user_table = wholetable[['uid']+self.interest_list]
         person_info = self.user_table.loc[self.user_table['uid']==uid, self.interest_list].to_dict(orient = 'lists')
+        if len(person_info)==0:
+            return
         key_word_list = []
         for key in self.interest_list:
                 if int(person_info[key][0])==1:

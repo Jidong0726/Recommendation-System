@@ -72,6 +72,8 @@ class user_similarity(object):
         self.user_table = wholetable[['uid','company','university','job_title']+self.interest_list]
         
         user_list = list(self.user_table['uid'])
+        if uid not in user_list:
+            return
         lists = []
         for user in user_list:
             if user!=uid:
