@@ -20,7 +20,7 @@ class recom_dataverse(object):
         self.recom_result = pd.DataFrame(columns = ['uid','name','url','doi_id', 'description','publish_date', 'author' ,'score'])
         
     def retrain_whole(self):
-        x = load_table_from_MySQL(username = 'grmds054_analyst', password = 'Cmethods1')
+        x = load_table_from_MySQL(username = 'grmds054_edison', password = 'Cmethods1G')
         wholetable, column_names = x.load_data('dr_rmds_users')
         self.user_table = wholetable[['uid']+self.interest_list]
         user_list = list(self.user_table['uid'])
@@ -63,7 +63,7 @@ class recom_dataverse(object):
             
                 
     def compute_one_user(self,uid):
-        x = load_table_from_MySQL(username = 'grmds054_analyst', password = 'Cmethods1')
+        x = load_table_from_MySQL(username = 'grmds054_edison', password = 'Cmethods1G')
         wholetable, column_names = x.load_data('dr_rmds_users')
         self.user_table = wholetable[['uid']+self.interest_list]
         person_info = self.user_table.loc[self.user_table['uid']==uid, self.interest_list].to_dict(orient = 'lists')
