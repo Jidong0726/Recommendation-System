@@ -42,7 +42,7 @@ class user_similarity(object):
             return sim/upper
                     
     def compute_sim_matrix(self):
-        x = load_table_from_MySQL(username = 'grmds054_analyst', password = 'Cmethods1')
+        x = load_table_from_MySQL(username = 'grmds054_edison', password = 'Cmethods1G')
         wholetable, column_names = x.load_data('dr_rmds_users')
         self.user_table = wholetable[['uid','company','university','job_title']+self.interest_list]
         
@@ -67,7 +67,7 @@ class user_similarity(object):
         self.user_sim.to_sql(name='dr_recom_simliar_users', con=engine, if_exists = 'replace', index=False)
         
     def update_user_sim_using_uid(self,uid):
-        x = load_table_from_MySQL(username = 'grmds054_analyst', password = 'Cmethods1')
+        x = load_table_from_MySQL(username = 'grmds054_edison', password = 'Cmethods1G')
         wholetable, column_names = x.load_data('dr_rmds_users')
         self.user_table = wholetable[['uid','company','university','job_title']+self.interest_list]
         
