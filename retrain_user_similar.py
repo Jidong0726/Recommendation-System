@@ -83,7 +83,7 @@ class user_similarity(object):
         lists.sort(key = lambda x:x[1], reverse = True)
         lists = lists[:7]
         if len(lists)!=0:
-            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=True)
+            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=False)
             metadata = MetaData()
             conn = engine.connect()
             dr_recom_simliar_users = Table('dr_recom_simliar_users', metadata, autoload=True, autoload_with=engine)

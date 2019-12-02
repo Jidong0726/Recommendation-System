@@ -91,7 +91,7 @@ class recom_dataverse(object):
                         strs = strs+elem+' | '
                     self.recom_result.loc[idx, 'author'] = strs
             
-            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=True)
+            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=False)
             metadata = MetaData()
             conn = engine.connect()
             dr_recom_dataverse_to_users = Table('dr_recom_dataverse_to_users', metadata, autoload=True, autoload_with=engine)
