@@ -12,9 +12,10 @@ from sqlalchemy import create_engine, MetaData, Table
 
 class recom_dataverse(object):
     def __init__(self):
-        self.interest_list = ['communication_services','consumer_discretionary','consumer_staples',
-                         'energy','financials','health_care','industrials','information_technology','materials',
-                         'real_estate','utilities']
+        self.interest_list = ['Fraud_Detection', 'Risk_Scoring', 'Healthcare', 'Internet_Search', 'Marketing_Effectiveness', 
+                              'Website_Recommendations', 'Image_Recognition', 'Speech_Recognition', 'Airline_Route_Planning', 
+                              'Price_Analytics', 'Supply_Chain_Optimization', 'Talent_Acquisition_Analytics', 'Environment_Analytics',                              
+                              'Epidemiology', 'Social_Policy', 'Evaluation_and_Assessment']
         self.user_table = pd.DataFrame()
         self.regular_key_word = ['machine%20learning','data%20science','statistics']
         self.recom_result = pd.DataFrame(columns = ['uid','name','url','doi_id', 'description','publish_date', 'author' ,'score'])
@@ -91,7 +92,7 @@ class recom_dataverse(object):
                         strs = strs+elem+' | '
                     self.recom_result.loc[idx, 'author'] = strs
             
-            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=False)
+            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=True)
             metadata = MetaData()
             conn = engine.connect()
             dr_recom_dataverse_to_users = Table('dr_recom_dataverse_to_users', metadata, autoload=True, autoload_with=engine)
@@ -104,4 +105,4 @@ if __name__ == "__main__":
     x = recom_dataverse()
     #x.retrain_whole()
     #x.create_dataset_rs_table()
-    x.compute_one_user(246)
+    x.compute_one_user(333)

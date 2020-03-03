@@ -9,27 +9,29 @@ import time
 
 class user_similarity(object):
     def __init__(self):
-        self.feature_weight = {'company':0.2, 'university': 0.4, 'position': 0.1, 'interest': 0.3}
+        self.feature_weight = {'company':0.2, 'university': 0.4, 'job_title': 0.1, 'interest': 0.3}
         self.user_sim = pd.DataFrame(columns = ['user','sim_user','sim_score'])
-        self.interest_list = ['communication_services','consumer_discretionary','consumer_staples',
-                         'energy','financials','health_care','industrials','information_technology','materials',
-                         'real_estate','utilities']
+        self.interest_list = ['Fraud_Detection', 'Risk_Scoring', 'Healthcare', 'Internet_Search', 'Marketing_Effectiveness', 
+                              'Website_Recommendations', 'Image_Recognition', 'Speech_Recognition', 'Airline_Route_Planning', 
+                              'Price_Analytics', 'Supply_Chain_Optimization', 'Talent_Acquisition_Analytics', 'Environment_Analytics',                              
+                              'Epidemiology', 'Social_Policy', 'Evaluation_and_Assessment']
         self.user_table = pd.DataFrame()
         
-       
-    
+          
+ 
     def compare(self, uid1, uid2):
-        info1 = self.user_table.loc[self.user_table['uid']==uid1,['company','university','position']].to_dict(orient = 'lists')
-        info2 = self.user_table.loc[self.user_table['uid']==uid2,['company','university','position']].to_dict(orient = 'lists')
+        info1 = self.user_table.loc[self.user_table['uid']==uid1][['company','university','job_title']].to_dict(orient = 'lists')
+        info2 = self.user_table.loc[self.user_table['uid']==uid2][['company','university','job_title']].to_dict(orient = 'lists')
         normalized_levenshtein = NormalizedLevenshtein()
         interest1 = self.user_table.loc[self.user_table['uid']==uid1,self.interest_list].values
         interest2 = self.user_table.loc[self.user_table['uid']==uid2,self.interest_list].values
         sim = 0
         upper = 1-self.feature_weight['interest']
         for key in self.feature_weight.keys():
-            if key=='interest':
-                sim += self.feature_weight[key]*cosine_similarity(interest1,interest2)[0][0]
-                upper += self.feature_weight[key]              
+            if key=='interest': 
+                if interest1[0][1]!= None and interest2[0][1]!= None:
+                    sim += self.feature_weight[key]*cosine_similarity(interest1,interest2)[0][0]
+                    upper += self.feature_weight[key]              
             else:
                 if type(info1[key][0]) is str and type(info2[key][0]) is str:
                     sim += self.feature_weight[key]*normalized_levenshtein.similarity(info1[key][0], info2[key][0])
@@ -83,13 +85,13 @@ class user_similarity(object):
         lists.sort(key = lambda x:x[1], reverse = True)
         lists = lists[:7]
         if len(lists)!=0:
-            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=False)
+            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=True)
             metadata = MetaData()
             conn = engine.connect()
             dr_recom_simliar_users = Table('dr_recom_simliar_users', metadata, autoload=True, autoload_with=engine)
             conn.execute(dr_recom_simliar_users.delete().where(dr_recom_simliar_users.c.user == uid))
             for elem in lists:
-                self.user_sim = self.user_sim.append({'user': uid, 'sim_user': elem[0], 'sim_score':elem[1]}, ignore_index = True)
+                self.user_sim = self.user_sim.append({'user': uid, 'sim_user': elem[0], 'sim_score':elem[1]}, ignore_index = False)
             self.user_sim.user = self.user_sim.user.astype(int)
             self.user_sim.sim_user = self.user_sim.sim_user.astype(int)
             self.user_sim.to_sql(name='dr_recom_simliar_users', con=engine, if_exists = 'append', index=False)
@@ -103,7 +105,7 @@ class user_similarity(object):
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     x = user_similarity()
-    #x.update_user_sim_using_uid(1)
-    x.compute_sim_matrix()
-    x.create_user_sim_table()
+    x.update_user_sim_using_uid(488)
+    #x.compute_sim_matrix()
+    #x.create_user_sim_table()
     
