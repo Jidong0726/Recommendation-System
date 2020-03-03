@@ -85,13 +85,13 @@ class user_similarity(object):
         lists.sort(key = lambda x:x[1], reverse = True)
         lists = lists[:7]
         if len(lists)!=0:
-            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=True)
+            engine = create_engine('mysql+mysqlconnector://grmds054_edison:Cmethods1G@198.20.83.186/grmds054_drup881',echo=False)
             metadata = MetaData()
             conn = engine.connect()
             dr_recom_simliar_users = Table('dr_recom_simliar_users', metadata, autoload=True, autoload_with=engine)
             conn.execute(dr_recom_simliar_users.delete().where(dr_recom_simliar_users.c.user == uid))
             for elem in lists:
-                self.user_sim = self.user_sim.append({'user': uid, 'sim_user': elem[0], 'sim_score':elem[1]}, ignore_index = False)
+                self.user_sim = self.user_sim.append({'user': uid, 'sim_user': elem[0], 'sim_score':elem[1]}, ignore_index = True)
             self.user_sim.user = self.user_sim.user.astype(int)
             self.user_sim.sim_user = self.user_sim.sim_user.astype(int)
             self.user_sim.to_sql(name='dr_recom_simliar_users', con=engine, if_exists = 'append', index=False)
